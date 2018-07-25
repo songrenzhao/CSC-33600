@@ -1,0 +1,45 @@
+
+Bankrupt Company Breakdown:
+
+ risk_level  | num_companies 
+-------------+---------------
+ High        |            58
+ Medium-High |            36
+ Medium      |            12
+ Low         |             1
+
+
+
+Non-Bankrupt Company Breakdown:
+
+ risk_level | num_companies 
+------------+---------------
+ Low        |           124
+ Medium     |            19
+
+
+
+Non-Bankrupt Companies that are at Medium Risk Level:
+
+ id  | risk_score | class | risk_level 
+-----+------------+-------+------------
+   2 |          3 | NB    | Medium
+   5 |          3 | NB    | Medium
+  13 |          3 | NB    | Medium
+  14 |          3 | NB    | Medium
+  15 |          3 | NB    | Medium
+  16 |          3 | NB    | Medium
+  17 |          3 | NB    | Medium
+  18 |          3 | NB    | Medium
+  19 |          3 | NB    | Medium
+  86 |          3 | NB    | Medium
+ 110 |          3 | NB    | Medium
+ 113 |          3 | NB    | Medium
+ 121 |          3 | NB    | Medium
+ 122 |          3 | NB    | Medium
+ 123 |          3 | NB    | Medium
+ 124 |          3 | NB    | Medium
+ 125 |          3 | NB    | Medium
+ 126 |          3 | NB    | Medium
+ 127 |          3 | NB    | Medium
+

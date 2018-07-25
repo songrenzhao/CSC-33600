@@ -1,0 +1,67 @@
+DROP TABLE
+CREATE TABLE
+COPY 1313
+Default footer is off.
+
+ We can print messages in PostgreSQL if we want.
+
+ id |  lname  |              fname               | class | age  |  sex   | survived | code 
+----+---------+----------------------------------+-------+------+--------+----------+------
+  1 | Allen   | Elisabeth Walton                 | 1st   |   29 | female |        1 |    1
+  2 | Allison | Helen Loraine                    | 1st   |    2 | female |        0 |    1
+  3 | Allison | Hudson Joshua Creighton          | 1st   |   30 | male   |        0 |    0
+  4 | Allison | Hudson JC (Bessie Waldo Daniels) | 1st   |   25 | female |        0 |    1
+  5 | Allison | Hudson Trevor                    | 1st   | 0.92 | male   |        1 |    0
+
+ total_passengers 
+------------------
+             1313
+
+ survived 
+----------
+      450
+
+             fname              |  lname   | survived 
+--------------------------------+----------+----------
+ Elisabeth Walton               | Allen    |        1
+ Hudson Trevor                  | Allison  |        1
+ Harry                          | Anderson |        1
+ Kornelia Theodosia             | Andrews  |        1
+ Edward Dale (Charlotte Lamson) | Appleton |        1
+
+ did_not_survive 
+-----------------
+             863
+
+              fname               |    lname     | survived 
+----------------------------------+--------------+----------
+ Helen Loraine                    | Allison      |        0
+ Hudson Joshua Creighton          | Allison      |        0
+ Hudson JC (Bessie Waldo Daniels) | Allison      |        0
+ Thomas jr                        | Andrews      |        0
+ Ramon                            | Artagaveytia |        0
+
+ total_females 
+---------------
+           462
+
+ total_males 
+-------------
+         851
+
+ no_survived_females 
+---------------------
+                 154
+
+ no_survived_males 
+-------------------
+               709
+
+  tot_pct_female  
+------------------
+ 35.1865955826352
+
+   tot_pct_male   
+------------------
+ 64.8134044173648
+

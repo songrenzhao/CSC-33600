@@ -1,0 +1,157 @@
+BEGIN;
+set client_encoding = 'UTF8';
+
+/*
+**************************************
+	     Songren Zhao	                 *
+	  CSC 33600 Database               *
+	   Sum 2018 at CCNY                *
+**************************************
+*/
+
+-- Table Creation
+DROP TABLE IF EXISTS Transactions CASCADE;
+Drop TABLE IF EXISTS Boats CASCADE;
+DROP table if exists buyers cascade;
+create table Buyers(
+	cust_id integer not null,
+	fname text not null,
+	lname text not null,
+	city text not null,
+	state character(2) not null,
+	referrer text not null
+);
+create table Boats(
+	prod_id integer not null,
+	brand text not null,
+	category text,
+	cost integer not null,
+	price float not null
+);
+create table Transactions(
+	trans_id integer not null,
+	cust_id integer not null,
+	prod_id integer not null,
+	qty integer,
+	price float not null
+);
+
+-- Data Loading
+/*
+\Copy Buyers FROM './Buyers.csv' with (FORMAT csv);
+\pset footer off
+
+\Copy Boats FROM './Boats.csv' with (FORMAT csv);
+\pset footer off
+
+\Copy Transactions FROM './Transactions.csv' with (FORMAT csv);
+\pset footer off
+*/
+
+insert into Buyers Values
+(1121,'Jane','Doe','Boston','MA','craigslist'),
+(1221,'Fred','Smith','Hartford','CT','facebook'),
+(1321,'John','Jones','New Haven','CT','google'),
+(1421,'Alan','Weston','Stony Brook','NY','craigslist'),
+(1521,'James','Smith','Darien','CT','boatjournal'),
+(1621,'Adam','East','Fort Lee','NJ','mariner'),
+(1721,'Mary','Jones','New Haven','CT','facebook'),
+(1821,'Tonya','James','Stamford','CT','boatbuyer'),
+(1921,'Elaine','Edwards','New Rochelle','NY','boatbuyer'),
+(2021,'Alan','Easton','White Plains','NY','craigslist'),
+(2121,'James','John','Ringwood','NJ','google'),
+(2221,'Ronald','Jones','Hackensack','NJ','craigslist'),
+(2321,'Freida','Alan','Stratford','CT','boatbuyer'),
+(2421,'Thelma','James','Paterson','NJ','facebook'),
+(2521,'Louise','John','Paramus','NJ','boatbuyer'),
+(2621,'Brad','Johnson','Fort Lee','NJ','google'),
+(2721,'Thomas','Jameson','Fairfield','CT','craigslist'),
+(2821,'Robert','Newbury','Astoria','NY','boatjournal'),
+(2921,'Edward','Oldbury','Brooklyn','NY','mariner'),
+(3021,'Juan','Reyes','Brooklyn','NY','facebook'),
+(3121,'Alberto','Delacruz','New York','NY','google'),
+(3221,'Margarita','Jones','White Plains','NY','boatbuyer'),
+(3321,'Penelope','Smith','Maspeth','NY','facebook')
+;
+
+insert into Boats Values
+(1217,'Criss Craft','sporty',20000,25000.0),
+(1117,'Bayliner','runabout',41000,45100.0),
+(1317,'Mastercraft','ski',67000,83750.0),
+(1417,'Boston Whaler','fishing',48000,55200.0),
+(1517,'Carver','cabin cruser',50000,62500.0),
+(1617,'Bayliner','runabout',33000,69300.0),
+(1717,'Kawasaki','sporty',51000,61200.0),
+(1817,'Kawasaki','runabout',33000,40260.0),
+(1917,'Zodiac','inflatable',17000,22100.0),
+(3017,'Egg Harbor','',60000,126000.0)
+;
+
+insert into Transactions Values
+(1124, 3121, 3017, 1, 126000.0),
+(1127, 1221, 1617, 1, 69300.0),
+(1130, 1821, 1317, 1, 83750.0),
+(1133, 1321, 1117, 1, 45100.0),
+(1136, 2521, 1717, 1, 61200.0),
+(1139, 2721, 1317, 1, 83750.0),
+(1142, 2621, 1417, 1, 55200.0),
+(1145, 1121, 1917, 1, 22100.0),
+(1148, 1821, 1817, 1, 40260.0),
+(1151, 2821, 3017, 1, 126000.0),
+(1154, 1621, 1917, 1, 22100.0),
+(1157, 3121, 1717, 1, 61200.0),
+(1160, 2321, 1517, 1, 62500.0),
+(1163, 3321, 1317, 1, 83750.0),
+(1166, 1721, 1917, 1, 22100.0),
+(1169, 2421, 1817, 1, 40260.0),
+(1172, 2921, 1417, 1, 55200.0),
+(1175, 2321, 3017, 1, 126000.0),
+(1178, 1221, 1317, 1, 83750.0),
+(1181, 1121, 1817, 1, 40260.0),
+(1184, 1321, 3017, 1, 126000.0),
+(1187, 1421, 1517, 1, 62500.0),
+(1190, 3321, 1517, 1, 62500.0)
+;
+
+
+ALTER TABLE ONLY Transactions
+	ADD CONSTRAINT Transactions_pk PRIMARY KEY(trans_id);
+ALTER TABLE ONLY Boats
+	ADD CONSTRAINT Boats_pk PRIMARY KEY(prod_id);
+ALTER TABLE ONLY Buyers
+	ADD CONSTRAINT Buyers_pk PRIMARY KEY(cust_id);
+ALTER TABLE ONLY Transactions 
+	ADD Constraint Transactions_prod_fk FOREIGN KEY(prod_id) REFERENCES Boats(prod_id);
+ALTER TABLE ONLY Transactions
+	ADD Constraint Transactions_cust_fk FOREIGN KEY(cust_id) REFERENCES Buyers(cust_id);
+commit;
+
+ANALYZE Transactions;
+ANALYZE Buyers;
+ANALYZE Boats;
+
+\echo '\n\nSongren Zhao \nCSC 33600 Summer 2018 at CCNY'
+
+--Questions about this data:
+
+-- 1.  We want to spend some advertising money - where should we spend it?
+--        I.e., What is our best referral source of buyers?
+\echo 'Best Referral Source of Buyers'
+select referrer, count(*) as num from Transactions inner join Buyers using(cust_id) group by referrer order by num desc;
+-- 2.  Who of our customers has not bought a boat?
+\echo '\nCustomers have not purchased a boat'
+select a.cust_id, a.fname, a.lname from Buyers a left join Transactions b using(cust_id) where trans_id is null;
+-- 3.  Which boats have not sold?
+\echo '\nBoats have no been sold'
+select prod_id, brand, category from Boats left join Transactions using(prod_id) where trans_id is null;
+-- 4.  What boat did Alan Weston buy?
+\echo '\nBoat that Alan Weston bought'
+select a.cust_id, b.fname, b.lname, c.brand, c.category from Transactions a inner join Buyers b using(cust_id) inner join Boats c using(prod_id) where fname = 'Alan' and lname = 'Weston'; 
+-- 5.  Who are our VIP customers?
+--        I.e., Has anyone bought more than one boat?
+\echo '\nVIP Customers'
+with temp_table as(
+	select cust_id, count(*) as counts from Transactions group by cust_id having count(*) > 1
+	--select cust_id, count(*) as counts from Transactions group by cust_id having counts > 1;
+)
+select a.fname, a.lname, b.counts from Buyers a inner join temp_table b using(cust_id);
