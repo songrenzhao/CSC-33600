@@ -1,2 +1,3 @@
 # CSC-33600
-Database
+CSC 336 Database
+Professor: Douglas Gordon
